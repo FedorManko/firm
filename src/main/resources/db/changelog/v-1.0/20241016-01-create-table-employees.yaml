@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20241016-01
+      author: f.manko@andersenlab.com
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: employees
+      changes:
+        - createTable:
+            tableName: employees
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_employees
+                  autoIncrement: true
+              - column:
+                  name: first_name
+                  type: varchar(30)
+              - column:
+                  name: last_name
+                  type: varchar(30)
+              - column:
+                  name: patronymic
+                  type: varchar(30)
+              - column:
+                  name: birth_date
+                  type: date
+              - column:
+                  name: hire_date
+                  type: date
+              - column:
+                  name: employee_type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manager_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: employees
+            constraintName: uq_first_last_name
+            columnNames: first_name,last_name
+        - addForeignKeyConstraint:
+            baseTableName: employees
+            baseColumnNames: manager_id
+            constraintName: fk_employees_manager_id
+            referencedTableName: employees
+            referencedColumnNames: id
+            onDelete: SET NULL

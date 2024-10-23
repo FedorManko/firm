@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgresql:
+    container_name: firm_postgresql
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  key-cloak-db:
+    container_name: key-cloak-db
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwerty
+  key-cloak:
+    container_name: key-cloak
+    image: bitnami/keycloak:latest
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_DATABASE_VENDOR: postgresql
+      DB_ADDR: key-cloak-db
+      KEYCLOAK_DATABASE_NAME: keycloak
+      KEYCLOAK_DATABASE_USER: postgres
+      KEYCLOAK_DATABASE_PASSWORD: qwerty
+      KEYCLOAK_ADMIN_USER: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      - key-cloak-db

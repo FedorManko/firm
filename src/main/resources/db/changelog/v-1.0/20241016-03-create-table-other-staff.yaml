@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20241016-03
+      author: f.manko@andersenlab.com
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: other_staff
+      changes:
+        - createTable:
+            tableName: other_staff
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_other_staff
+                  autoIncrement: true
+              - column:
+                  name: employee_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: un_other_staff_employee_id
+              - column:
+                  name: description
+                  type: varchar(50)
+        - addForeignKeyConstraint:
+            baseTableName: other_staff
+            baseColumnNames: employee_id
+            constraintName: fk_other_staff_employee_id
+            referencedTableName: employees
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
